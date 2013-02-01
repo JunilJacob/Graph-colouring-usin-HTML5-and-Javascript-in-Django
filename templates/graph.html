@@ -1,0 +1,145 @@
+<!doctype html>
+<html>
+
+<style type="text/css"><!--
+	body{background-color:#a14342;}
+	#graph { position: relative; top: 20px; left: 250px;border: 5px solid #000; }
+        #clear { position: relative; top: -500px; left: 350px;}
+        #helpb { position: relative; top: -500px; left: 350px;}
+        #submit { position: relative; top: -500px; left: 350px;}	
+    --></style>
+<body>
+<center>
+<h3><blink>GRAPH COLOURING</blink></h3></center>
+<canvas id="graph" width="800" height="550"></canvas>
+<input id="clear" type=button value="Clear" >
+<input id="submit" type=button value="Submit" >
+<input id="helpb" type=button value="Help" >
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script>
+	canvas=document.getElementById('graph'); 	
+	context = canvas.getContext('2d');
+
+	canvas.addEventListener('dblclick',drawNode,false)
+	canvas.addEventListener('click',drawEdge, false);
+	clear.addEventListener('click', clearCanvas, false);
+	helpb.addEventListener('click', help, false);
+	submit.addEventListener('click', Submit, false);
+	
+	var vertex_list=[],adj_list=[],start_edge=0,selected_vertex=-1,v=0;
+
+	var color= ["black","green","red","blue","gold","violet","pink","orange","grey","cyan","purple","indigo","yellow","magenta","brown","silver"]
+	function help(){
+		alert("1.Double Click to create nodes\n2.Click to connect nodes using edges\n3.Submit for colouring");	
+	}
+	function Point(x,y){
+                this.x = x;
+		this.y = y;
+	}
+
+	function clearCanvas(){
+		document.location.href="/"
+	}
+
+	function Submit(){
+		var i;
+		
+		for(i=0;i<adj_list.length;i++)
+			if(adj_list[i]==undefined){
+				adj_list[i]= new Array();
+			}
+		$.post("/",{data:JSON.stringify(adj_list)},function(data){
+			data =data.replace(/\[/g,"").replace(/\]/g,"").split(",");
+			var i;
+			for(i=0;i<data.length;i++){
+				drawVertex(vertex_list[i],color[Number(data[i])]);
+			}
+		});
+		
+	}
+	
+	function drawVertex(point,color){
+		
+		context.beginPath();
+		context.arc(point.x,point.y,30, 0, 2*Math.PI, false);
+		context.stroke();
+		context.closePath();
+		context.fillStyle=color 
+		context.fill();
+	}	
+
+	function drawNode(e){
+		
+		point=mousePos(e);
+		if(checkVertexInRange(point,60)==-1){
+			drawVertex(point,"black");
+			context.font = "10pt Calibri";
+			context.fillText(v,point.x+10,point.y-30);			
+			v++;
+			vertex_list.push(point);
+		}	
+
+	}
+	function checkVertexInRange(point,range){
+		
+		for(i=0;i<vertex_list.length;i++) {
+			rangex = point.x>=vertex_list[i].x-range && point.x<=vertex_list[i].x+range
+			rangey = point.y>=vertex_list[i].y-range && point.y<=vertex_list[i].y+range
+			if(rangex && rangey)
+				return i;
+		}
+		return -1;
+	}
+		 			
+	function drawEdge(e){
+		
+		var point = mousePos(e);
+		var vertex_no=checkVertexInRange(point,40);
+		if(vertex_no>=0)
+		{
+			if(start_edge==0){
+				start_edge=1;
+				selected_vertex=vertex_no;
+				context.beginPath();
+      				context.moveTo(vertex_list[vertex_no].x, vertex_list[vertex_no].y);
+				
+      
+			}
+			else{
+				start_edge=0;
+				if(adj_list[selected_vertex]==undefined)
+					adj_list[selected_vertex]= new Array();
+				if(adj_list[vertex_no]==undefined)
+					adj_list[vertex_no]= new Array();
+				if(selected_vertex!=vertex_no){
+					adj_list[selected_vertex].push(vertex_no);
+					adj_list[vertex_no].push(selected_vertex);
+				}
+				context.lineTo(vertex_list[vertex_no].x,vertex_list[vertex_no].y)
+				context.stroke();
+				context.closePath(); 
+			}
+		}
+		else
+			start_edge=0;
+    	}
+	function mousePos(e){
+		var point = new Point(0,0);
+	        if (e.pageX != undefined && e.pageY != undefined) {
+			point.x = e.pageX;
+			point.y = e.pageY;
+		}
+		else{
+			point.x = e.clientX + document.body.scrollLeft +
+				document.documentElement.scrollLeft;
+			point.y = e.clientY + document.body.scrollTop +
+				document.documentElement.scrollTop;
+		}
+		
+		point.x -= canvas.offsetLeft;
+		point.y -= canvas.offsetTop;
+		return point;       	
+	}
+</script>
+</body>
+</html>
