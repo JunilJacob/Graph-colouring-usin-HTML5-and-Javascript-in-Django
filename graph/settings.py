@@ -1,5 +1,5 @@
 # Django settings for graph project.
-
+import os
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -100,8 +100,8 @@ ROOT_URLCONF = 'graph.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'graph.wsgi.application'
-
-TEMPLATE_DIRS = ('/home/junil/graph coloring/graph/templates',
+PROJECT_DIR = os.path.dirname(__file__)
+TEMPLATE_DIRS = (os.path.join(PROJECT_DIR, "templates"),
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
