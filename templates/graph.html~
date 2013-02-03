@@ -2,7 +2,7 @@
 <html>
 
 <style type="text/css"><!--
-	body{background-color:#a00e0e;}
+	body{background-color:#a14342;}
 	#graph { position: relative; top: 20px; left: 250px;border: 5px solid #000; }
         #clear { position: relative; top: -500px; left: 350px;}
         #helpb { position: relative; top: -500px; left: 350px;}
@@ -15,7 +15,7 @@
 <input id="clear" type=button value="Clear" >
 <input id="submit" type=button value="Submit" >
 <input id="helpb" type=button value="Help" >
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script type="text/javascript" src="jquery.min.js"></script>
 <script>
 	canvas=document.getElementById('graph'); 	
 	context = canvas.getContext('2d');
@@ -35,6 +35,7 @@
 	function Point(x,y){
                 this.x = x;
 		this.y = y;
+		
 	}
 
 	function clearCanvas(){
