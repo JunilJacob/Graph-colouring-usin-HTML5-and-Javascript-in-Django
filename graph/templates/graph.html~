@@ -103,7 +103,14 @@
 				start_edge=1;
 				selected_vertex=vertex_no;
 				context.beginPath();
+				context.arc(vertex_list[vertex_no].x, vertex_list[vertex_no].y,30, 0, 2*Math.PI, false);
+				context.stroke();
+				context.closePath();
+				context.fillStyle="white";
+				context.fill();				
+				context.beginPath();
       				context.moveTo(vertex_list[vertex_no].x, vertex_list[vertex_no].y);
+				
 				
       
 			}
@@ -120,6 +127,8 @@
 				context.lineTo(vertex_list[vertex_no].x,vertex_list[vertex_no].y)
 				context.stroke();
 				context.closePath(); 
+				drawVertex(vertex_list[selected_vertex]);
+				drawVertex(vertex_list[vertex_no]);
 			}
 		}
 		else
