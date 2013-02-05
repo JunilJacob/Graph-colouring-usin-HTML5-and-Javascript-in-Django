@@ -131,8 +131,7 @@
 				drawVertex(vertex_list[vertex_no]);
 			}
 		}
-		else
-			start_edge=0;
+		
     	}
 	function mousePos(e){
 		var point = new Point(0,0);
