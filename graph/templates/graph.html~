@@ -15,7 +15,7 @@
 <input id="clear" type=button value="Clear" >
 <input id="submit" type=button value="Submit" >
 <input id="helpb" type=button value="Help" >
-<script type="text/javascript" src="jquery.min.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script>
 	canvas=document.getElementById('graph'); 	
 	context = canvas.getContext('2d');
@@ -35,7 +35,7 @@
 	function Point(x,y){
                 this.x = x;
 		this.y = y;
-		
+		this.color="black";
 	}
 
 	function clearCanvas(){
@@ -53,19 +53,20 @@
 			data =data.replace(/\[/g,"").replace(/\]/g,"").split(",");
 			var i;
 			for(i=0;i<data.length;i++){
-				drawVertex(vertex_list[i],color[Number(data[i])]);
+				vertex_list[i].color=color[Number(data[i])];
+				drawVertex(vertex_list[i]);
 			}
 		});
 		
 	}
 	
-	function drawVertex(point,color){
+	function drawVertex(point){
 		
 		context.beginPath();
 		context.arc(point.x,point.y,30, 0, 2*Math.PI, false);
 		context.stroke();
 		context.closePath();
-		context.fillStyle=color 
+		context.fillStyle=point.color;
 		context.fill();
 	}	
 
@@ -73,7 +74,7 @@
 		
 		point=mousePos(e);
 		if(checkVertexInRange(point,60)==-1){
-			drawVertex(point,"black");
+			drawVertex(point);
 			context.font = "10pt Calibri";
 			context.fillText(v,point.x+10,point.y-30);			
 			v++;

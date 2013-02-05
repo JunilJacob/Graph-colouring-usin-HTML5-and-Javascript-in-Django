@@ -35,7 +35,7 @@
 	function Point(x,y){
                 this.x = x;
 		this.y = y;
-		
+		this.color="black";
 	}
 
 	function clearCanvas(){
@@ -53,19 +53,20 @@
 			data =data.replace(/\[/g,"").replace(/\]/g,"").split(",");
 			var i;
 			for(i=0;i<data.length;i++){
-				drawVertex(vertex_list[i],color[Number(data[i])]);
+				vertex_list[i].color=color[Number(data[i])];
+				drawVertex(vertex_list[i]);
 			}
 		});
 		
 	}
 	
-	function drawVertex(point,color){
+	function drawVertex(point){
 		
 		context.beginPath();
 		context.arc(point.x,point.y,30, 0, 2*Math.PI, false);
 		context.stroke();
 		context.closePath();
-		context.fillStyle=color 
+		context.fillStyle=point.color;
 		context.fill();
 	}	
 
@@ -73,7 +74,7 @@
 		
 		point=mousePos(e);
 		if(checkVertexInRange(point,60)==-1){
-			drawVertex(point,"black");
+			drawVertex(point);
 			context.font = "10pt Calibri";
 			context.fillText(v,point.x+10,point.y-30);			
 			v++;
@@ -119,6 +120,8 @@
 				context.lineTo(vertex_list[vertex_no].x,vertex_list[vertex_no].y)
 				context.stroke();
 				context.closePath(); 
+				drawVertex(vertex_list[selected_vertex]);
+				drawVertex(vertex_list[vertex_no]);
 			}
 		}
 		else
